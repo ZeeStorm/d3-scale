@@ -100,16 +100,21 @@ export function calendar(year, month, week, day, hour, minute, second, milliseco
     return arguments.length ? domain(map.call(_, number)) : domain().map(date);
   };
 
+  var testDate = new Date('2014-01-01T00:00:00').getTime();
+
   scale.ticks = function(interval, step) {
     var d = domain(),
         t0 = d[0],
         t1 = d[d.length - 1],
         r = t1 < t0,
-        t;
+        t,
+        ti;
     if (r) t = t0, t0 = t1, t1 = t;
-    t = tickInterval(interval, t0, t1, step);
-    t = t ? t.range(t0, t1 + 1) : []; // inclusive stop
-    return r ? t.reverse() : t;
+    ti = tickInterval(interval, t0, t1, step);
+    t = ti ? ti.range(t0, t1 + 1) : []; // inclusive stop
+    t = r ? t.reverse() : t;
+
+    return [t, ti.range(testDate, t0).length];
   };
 
   scale.tickFormat = function(count, specifier) {
