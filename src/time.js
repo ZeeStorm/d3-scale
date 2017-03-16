@@ -114,7 +114,7 @@ export function calendar(year, month, week, day, hour, minute, second, milliseco
     t = ti ? ti.range(t0, t1 + 1) : []; // inclusive stop
     t = r ? t.reverse() : t;
 
-    return [t, ti.range(testDate, t0).length];
+    return [t, (t[0] - testDate) / (t[1] - t[0])];
   };
 
   scale.tickFormat = function(count, specifier) {
