@@ -89,7 +89,7 @@ export function calendar(year, month, week, day, hour, minute, second, milliseco
       }
     }
 
-    return step == null ? interval : interval.every(step);
+    return [step == null ? interval : interval.every(step), interval.count, step];
   }
 
   scale.invert = function(y) {
@@ -100,7 +100,7 @@ export function calendar(year, month, week, day, hour, minute, second, milliseco
     return arguments.length ? domain(map.call(_, number)) : domain().map(date);
   };
 
-  var testDate = new Date('2014-01-01T00:00:00').getTime();
+  var testDate = new Date('2014-01-01T00:00:00.000Z').getTime();
 
   scale.ticks = function(interval, step) {
     var d = domain(),
@@ -111,10 +111,13 @@ export function calendar(year, month, week, day, hour, minute, second, milliseco
         ti;
     if (r) t = t0, t0 = t1, t1 = t;
     ti = tickInterval(interval, t0, t1, step);
-    t = ti ? ti.range(t0, t1 + 1) : []; // inclusive stop
+    t = ti[0] ? ti[0].range(t0, t1 + 1) : []; // inclusive stop
     t = r ? t.reverse() : t;
 
-    return [t, (t[0] - testDate) / (t[1] - t[0])];
+    var tickDate = ti[0].ceil(testDate);
+    var len = Math.round(ti[1](tickDate, t[0]) / ti[2]);
+
+    return [t, len];
   };
 
   scale.tickFormat = function(count, specifier) {
