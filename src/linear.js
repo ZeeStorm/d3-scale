@@ -8,7 +8,7 @@ export function linearish(scale) {
 
   scale.ticks = function(count) {
     var d = domain();
-    return ticks(d[0], d[d.length - 1], count == null ? 10 : count);
+    return [ticks(d[0], d[d.length - 1], count == null ? 10 : count), 0];
   };
 
   scale.tickFormat = function(count, specifier) {
